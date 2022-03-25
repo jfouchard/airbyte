@@ -174,7 +174,7 @@ jobs:
     steps:
       - name: Set up CI Gradle Properties
         run: |
-          echo "${{ needs.find_valid_pat.outputs.pat }}"
+          echo "${{ toJSON(needs) }}"
       - name: Checkout Airbyte
         uses: actions/checkout@v2
       - name: Start AWS Runner
