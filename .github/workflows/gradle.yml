@@ -1,6 +1,7 @@
 name: Airbyte CI
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 */1 * * *"
   push:
@@ -64,15 +65,17 @@ jobs:
     name: "Find a PAT with room for actions"
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    run: |
-      ./tools/bin/find_non_rate_limited_PAT \
-        ${{ secrets.SUPERTOPHER_PAT }}
-        ${{ secrets.AIRBYTEIO_PAT }}
-        ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }}
-        ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
-        ${{ secrets.OCTAVIA_PAT }}
-    outputs:
-      pat:
+    steps:
+      - name: Set up CI Gradle Properties
+        run: |
+          ./tools/bin/find_non_rate_limited_PAT \
+            ${{ secrets.SUPERTOPHER_PAT }}
+            ${{ secrets.AIRBYTEIO_PAT }}
+            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }}
+            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
+            ${{ secrets.OCTAVIA_PAT }}
+        outputs:
+          pat: ${{ steps.filter.outputs.frontend }}
 
   # Uncomment to debug.
   #  changes-output:
