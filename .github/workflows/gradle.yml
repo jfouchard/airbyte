@@ -73,8 +73,11 @@ jobs:
       - name: variables is a good name
         id: variables
         run: |
-          echo "POOPYFACE"
-          echo "::set-output name=pat::POOPYFACE"
+          ./tools/bin/find_non_rate_limited_PAT \
+            ${{ secrets.AIRBYTEIO_PAT }}
+            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }}
+            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
+            ${{ secrets.OCTAVIA_PAT }}
 
 
   # Uncomment to debug.
@@ -176,9 +179,6 @@ jobs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
     steps:
-      - name: Set up CI Gradle Properties
-        run: |
-          echo "${{ toJSON(needs) }}"
       - name: Checkout Airbyte
         uses: actions/checkout@v2
       - name: Start AWS Runner
