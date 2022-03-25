@@ -86,7 +86,7 @@ jobs:
 
           # @ is the entire CLI arg... ie `this_script arg1 arg2`
           # fun fact, any string with spaces is an array in shell!
-          for personal_access_token in "${{ secrets.SUPERTOPHER_PAT }} ${{ secrets.AIRBYTEIO_PAT }} ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }} ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }} ${{ secrets.OCTAVIA_PAT }}"
+          for personal_access_token in "${{ secrets.AIRBYTEIO_PAT }}"
             do
               echo -e "$blue_text""Curl-ing rate_limit for PAT:  \"$personal_access_token\"""$default_text"
 
