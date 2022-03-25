@@ -70,7 +70,8 @@ jobs:
     steps:
       - name: Checkout Airbyte
         uses: actions/checkout@v2
-      - id: variables
+      - name: variables is a good name
+        id: variables
         run: |
           echo "POOPYFACE"
           echo "::set-output name=pat::POOPYFACE"
