@@ -281,7 +281,7 @@ jobs:
         uses: supertopher/ec2-github-runner@v15.0.4
         with:
           mode: stop
-          github-token: ${{ find_valid_pat.pat }}
+          github-token: ${{ needs.find_valid_pat.outputs.pat }}
           label: ${{ needs.start-connectors-base-build-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-connectors-base-build-runner.outputs.ec2-instance-id }}
 
@@ -310,7 +310,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.SELF_RUNNER_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.SELF_RUNNER_AWS_SECRET_ACCESS_KEY }}
-          github-token: ${{ find_valid_pat.pat }}
+          github-token: ${{ needs.find_valid_pat.outputs.pat }}
   frontend-test:
     name: "Frontend: Run Test"
     needs: start-frontend-test-runner # required to start the main job when the runner is ready
@@ -377,7 +377,7 @@ jobs:
         uses: supertopher/ec2-github-runner@v15.0.4
         with:
           mode: stop
-          github-token: ${{ find_valid_pat.pat }}
+          github-token: ${{ needs.find_valid_pat.outputs.pat }}
           label: ${{ needs.start-frontend-test-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-frontend-test-runner.outputs.ec2-instance-id }}
 
@@ -406,7 +406,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.SELF_RUNNER_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.SELF_RUNNER_AWS_SECRET_ACCESS_KEY }}
-          github-token: ${{ find_valid_pat.pat }}
+          github-token: ${{ needs.find_valid_pat.outputs.pat }}
   platform-build:
     name: "Platform: Build"
     # In case of self-hosted EC2 errors, remove the next two lines and uncomment the currently commented out `runs-on` line.
