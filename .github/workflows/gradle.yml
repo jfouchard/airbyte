@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       pat:
-        value: ${{ find_valid_pat.variables.outputs.pat }}
+        value: ${{ steps.variables.outputs.pat }}
     steps:
       - name: Checkout Airbyte
         uses: actions/checkout@v2
