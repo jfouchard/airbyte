@@ -66,8 +66,7 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     outputs:
-      pat:
-        value: ${{ steps.variables.outputs.pat }}
+      pat: ${{ steps.variables.outputs.pat }}
     steps:
       - name: Checkout Airbyte
         uses: actions/checkout@v2
