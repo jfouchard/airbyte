@@ -264,6 +264,7 @@ jobs:
     needs:
       - start-connectors-base-build-runner # required to get output from the start-runner job
       - build-connectors-base # required to wait when the main job is done
+      - find_valid_pat
     runs-on: ubuntu-latest
     # Always is required to stop the runner even if the previous job has errors. However always() runs even if the previous step is skipped.
     # Thus, we check for skipped here.
@@ -279,7 +280,7 @@ jobs:
         uses: supertopher/ec2-github-runner@v15.0.4
         with:
           mode: stop
-          github-token: ${{ secrets.OCTAVIA_PAT }}
+          github-token: ${{ find_valid_pat.pat }}
           label: ${{ needs.start-connectors-base-build-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-connectors-base-build-runner.outputs.ec2-instance-id }}
 
@@ -287,7 +288,9 @@ jobs:
   # In case of self-hosted EC2 errors, remove this block.
   start-frontend-test-runner:
     name: "Frontend: Start Test EC2 Runner"
-    needs: changes
+    needs:
+      - changes
+      - find_valid_pat
     # Because scheduled builds on master require us to skip the changes job. Use always() to force this to run on master.
     if: |
       needs.changes.outputs.frontend == 'true' || needs.changes.outputs.build == 'true' || github.ref == 'refs/heads/master'
@@ -306,7 +309,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.SELF_RUNNER_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.SELF_RUNNER_AWS_SECRET_ACCESS_KEY }}
-          github-token: ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
+          github-token: ${{ find_valid_pat.pat }}
   frontend-test:
     name: "Frontend: Run Test"
     needs: start-frontend-test-runner # required to start the main job when the runner is ready
@@ -357,6 +360,7 @@ jobs:
     needs:
       - start-frontend-test-runner # required to get output from the start-runner job
       - frontend-test # required to wait when the main job is done
+      - find_valid_pat
     runs-on: ubuntu-latest
     # Always is required to stop the runner even if the previous job has errors. However always() runs even if the previous step is skipped.
     # Thus, we check for skipped here.
@@ -372,7 +376,7 @@ jobs:
         uses: supertopher/ec2-github-runner@v15.0.4
         with:
           mode: stop
-          github-token: ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
+          github-token: ${{ find_valid_pat.pat }}
           label: ${{ needs.start-frontend-test-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-frontend-test-runner.outputs.ec2-instance-id }}
 
@@ -382,7 +386,9 @@ jobs:
   # In case of self-hosted EC2 errors, remove this block.
   start-platform-build-runner:
     name: "Platform: Start Build EC2 Runner"
-    needs: changes
+    needs:
+      - changes
+      - find_valid_pat
     # Because scheduled builds on master require us to skip the changes job. Use always() to force this to run on master.
     if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.build == 'true' || (always() && github.ref == 'refs/heads/master')
     timeout-minutes: 10
@@ -399,7 +405,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.SELF_RUNNER_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.SELF_RUNNER_AWS_SECRET_ACCESS_KEY }}
-          github-token: ${{ secrets.OCTAVIA_PAT }}
+          github-token: ${{ find_valid_pat.pat }}
   platform-build:
     name: "Platform: Build"
     # In case of self-hosted EC2 errors, remove the next two lines and uncomment the currently commented out `runs-on` line.
@@ -428,7 +434,8 @@ jobs:
         run: |
           mkdir -p ~/.gradle/
           cat > ~/.gradle/gradle.properties <<EOF
-          org.gradle.jvmargs=-Xmx8g -Xss4m --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+          org.gradle.jvmargs=-Xmx8g -Xss4m \
+            --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
             --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
             --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
             --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
