@@ -30,6 +30,10 @@ if (!env.containsKey('VERSION')) {
     throw new Exception('Version not specified in .env file...')
 }
 
+ext {
+    version = System.getenv("VERSION") ?: env.VERSION
+}
+
 def createLicenseWith = { File license, String startComment, String endComment, String lineComment, boolean isPython ->
     /*
     In java, we don't have a second linter/styling tool other than spotless so it doesn't really
@@ -129,9 +133,8 @@ spotless {
 check.dependsOn 'spotlessApply'
 
 @SuppressWarnings('GroovyAssignabilityCheck')
-def Task getDockerBuildTask(String artifactName, String projectDir) {
+def Task getDockerBuildTask(String artifactName, String projectDir, String buildVersion) {
     return task ("buildDockerImage-$artifactName"(type: DockerBuildImage) {
-        def buildTag = System.getenv('VERSION') ?: 'dev'
         def buildPlatform = System.getenv('DOCKER_BUILD_PLATFORM') ?: 'linux/amd64'
         def alpineImage = System.getenv('ALPINE_IMAGE') ?: 'alpine:3.4'
         def postgresImage = System.getenv('POSTGRES_IMAGE') ?: 'postgres:13-alpine'
@@ -140,11 +143,12 @@ def Task getDockerBuildTask(String artifactName, String projectDir) {
 
         inputDir = file("$projectDir/build/docker")
         platform = buildPlatform
-        images.add("airbyte/$artifactName:$buildTag")
+        images.add("airbyte/$artifactName:$buildVersion")
         buildArgs.put('JDK_VERSION', jdkVersion)
         buildArgs.put('DOCKER_BUILD_ARCH', buildArch)
         buildArgs.put('ALPINE_IMAGE', alpineImage)
         buildArgs.put('POSTGRES_IMAGE', postgresImage)
+        buildArgs.put('VERSION', buildVersion)
     })
 }
 
@@ -166,7 +170,7 @@ allprojects {
     group = "io.${rootProject.name}${sub.isEmpty() ? '' : ".$sub"}"
     project.archivesBaseName = "${project.group}-${project.name}"
 
-    version = env.VERSION
+    version = rootProject.ext.version
 }
 
 // Java projects common configurations
