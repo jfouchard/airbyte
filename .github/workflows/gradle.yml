@@ -65,13 +65,12 @@ jobs:
     name: "Find a PAT with room for actions"
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    outputs:
+      pat:
+        value: ${{ find_valid_pat.variables.outputs.pat }}
     steps:
       - name: Checkout Airbyte
         uses: actions/checkout@v2
-      - name: Find a valid PAT
-        outputs:
-          pat:
-            value: ${{ find_valid_pat.variables.outputs.pat }}
       - id: variables
         run: |
           echo "POOPYFACE"
