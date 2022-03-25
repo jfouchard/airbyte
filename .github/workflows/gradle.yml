@@ -179,6 +179,9 @@ jobs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
     steps:
+      - name: topher
+        run: |
+          echo '${{ toJSON(needs) }}'
       - name: Checkout Airbyte
         uses: actions/checkout@v2
       - name: Start AWS Runner
