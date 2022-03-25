@@ -78,6 +78,7 @@ jobs:
             ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }} \
             ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }} \
             ${{ secrets.OCTAVIA_PAT }}
+          echo "::set-output name=two::hello"
 
 
   # Uncomment to debug.
