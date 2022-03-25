@@ -66,6 +66,8 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Airbyte
+        uses: actions/checkout@v2
       - name: Set up CI Gradle Properties
         run: |
           ./tools/bin/find_non_rate_limited_PAT \
