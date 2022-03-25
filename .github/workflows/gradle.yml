@@ -73,11 +73,6 @@ jobs:
       - name: Check PAT rate limits
         id: variables
         run: |
-            ${{ secrets.AIRBYTEIO_PAT }} \
-            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }} \
-            ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }} \
-            ${{ secrets.OCTAVIA_PAT }}
-
           # Run away from anything even a little scary
           set -o nounset # -u exit if a variable is not set
           set -o errexit # -f exit for any command failure
