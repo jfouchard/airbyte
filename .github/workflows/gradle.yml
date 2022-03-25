@@ -74,8 +74,6 @@ jobs:
             ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN }}
             ${{ secrets.SELF_RUNNER_GITHUB_ACCESS_TOKEN_1 }}
             ${{ secrets.OCTAVIA_PAT }}
-        outputs:
-          pat: ${{ steps.filter.outputs.frontend }}
 
   # Uncomment to debug.
   #  changes-output:
