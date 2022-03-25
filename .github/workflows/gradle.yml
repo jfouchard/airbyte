@@ -69,9 +69,14 @@ jobs:
       - name: Checkout Airbyte
         uses: actions/checkout@v2
       - name: Find a valid PAT
-        run: |
-          echo "POOPYFACE"
-          echo "::set-output name=pat::POOPYFACE"
+        outputs:
+          pat:
+            value: ${{ find_valid_pat.variables.outputs.pat }}
+      - id: variables
+          run: |
+            echo "POOPYFACE"
+            echo "::set-output name=pat::POOPYFACE"
+
 
   # Uncomment to debug.
   #  changes-output:
