@@ -39,7 +39,7 @@ for personal_access_token in $@
     if test $rate_limit_remaining -gt 100; then
       echo -e "$blue_text""Found a good PAT!!""$default_text"
 
-      echo "::set-output name=pat::bloodyhell"
+      echo "::set-output name=pat::""$personal_access_token\n"
       exit 0
     else
       echo -e "$red_text""Rate limit exceed for this PAT!""$default_text"
